@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google-site-verification" content="a6QFnJKq2bRMPeDXKyX23NdOcOOhfTcw6uEe3CPKZew" />
+    <meta name="google-site-verification" content="a6QFnJKq2bRMPeDXKyX23NdOcOOhfTcw6uEe3CPKZew" >
     <!--favicons-->
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
@@ -23,6 +23,32 @@
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!--end favicons-->
+    <!--Social Network Metadata-->
+    <!--begin open graph-->
+    <meta property="og:title" content="Will Blankenship's Résumé">
+    <meta property="og:description" content="Writer of code and maintainer of systems">
+    <meta property="og:url" content="http://will.blankenship.io">
+    <meta property="og:site_name" content="Will Blankenship">
+    <meta property="og:image" content="http://will.blankenship.io/images/will.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:type" content="profile">
+    <meta property="og:type" content="profile">
+    <meta property="profile:first_name" content="William">
+    <meta property="profile:last_name" content="Blankenship">
+    <meta property="profile:username" content="wblankenship">
+    <meta property="profile:gender" content="male">
+    <!--end open graph-->
+    <!--begin twitter-->
+    <meta name="twitter:card" content="Summary">
+    <meta name="twitter:site" content="@wjblankenship">
+    <meta name="twitter:creator" content="@wjblankenship">
+    <meta name="twitter:title" content="Will Blankenship's Résumé">
+    <meta name="twitter:description" content="Writer of code and maintainer of systems">
+    <meta name="twitter:image:src" content="http://will.blankenship.io/images/will.png">
+    <!--end twitter-->
+    <!--End Social Network Metadata-->
     <link rel="stylesheet" href="/css/pure.css">
     <link rel="stylesheet" href="/css/pure-grids.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
@@ -162,9 +188,19 @@
     .press_openspace {
       background-image: url('/images/press_openspace.png');
     }
+    #schema {
+      display: none;
+    }
     </style>
   </head>
   <body>
+    <!--begin schema microdata-->
+    <div id="schema" itemscope itemtype="http://schema.org/Article">
+      <h1 itemprop="name">Will Blankenship's Résumé</h1>
+      <img itemprop="image" src="http://will.blankenship.io/images/will.png" />
+      <p itemprop="description">Writer of code and maintainer of systems</p>
+    </div>
+    <!--end schema microdata-->
     <div class="pure-g">
       <div class="pure-u-1 header">
         <div class="profile"></div>
