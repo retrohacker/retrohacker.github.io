@@ -106,6 +106,10 @@ h1.section-head {
   background-image: url('../images/getos.png');
   background-position: top !important;
 }
+.dante {
+  background-image: url('../images/dante.png');
+  background-position: top !important;
+}
 .iojs {
   background-image: url('../images/iojs.png');
   background-size: contain !important;
