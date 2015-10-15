@@ -1,0 +1,113 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="a6QFnJKq2bRMPeDXKyX23NdOcOOhfTcw6uEe3CPKZew" >
+    <!--favicons-->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-title" content="wblankenship">
+    <meta name="application-name" content="wblankenship">
+    <meta name="msapplication-TileColor" content="#b91d47">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!--end favicons-->
+    <!--Social Network Metadata-->
+    <!--begin open graph-->
+    <meta property="og:title" content="Will Blankenship's Résumé">
+    <meta property="og:description" content="Writer of code and maintainer of systems">
+    <meta property="og:url" content="http://will.blankenship.io">
+    <meta property="og:site_name" content="Will Blankenship">
+    <meta property="og:image" content="http://will.blankenship.io/images/will.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="350">
+    <meta property="og:type" content="profile">
+    <meta property="og:type" content="profile">
+    <meta property="profile:first_name" content="William">
+    <meta property="profile:last_name" content="Blankenship">
+    <meta property="profile:username" content="wblankenship">
+    <meta property="profile:gender" content="male">
+    <!--end open graph-->
+    <!--begin twitter-->
+    <meta name="twitter:card" content="Summary">
+    <meta name="twitter:site" content="@wjblankenship">
+    <meta name="twitter:creator" content="@wjblankenship">
+    <meta name="twitter:title" content="Will Blankenship's Résumé">
+    <meta name="twitter:description" content="Writer of code and maintainer of systems">
+    <meta name="twitter:image:src" content="http://will.blankenship.io/images/will.png">
+    <!--end twitter-->
+    <!--End Social Network Metadata-->
+    <link rel="stylesheet" href="/css/monokai.css">
+    <link rel="stylesheet" href="/css/pure.css">
+    <link rel="stylesheet" href="/css/pure-grids.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <script>
+      var text = ""+
+"                                         _.oo." +"\n"+
+"                 _.u[[/;:,.         .odMMMMMM'" +"\n"+
+"              .o888UU[[[/;:-.  .o@P^    MMM^" +"\n"+
+"             oN88888UU[[[/;::-.        dP^" +"\n"+
+"            dNMMNN888UU[[[/;:--.   .o@P^" +"\n"+
+"           ,MMMMMMN888UU[[/;::-. o@^" +"\n"+
+"           NNMMMNN888UU[[[/~.o@P^" +"\n"+
+"           888888888UU[[[/o@^-.." +"\n"+
+"          oI8888UU[[[/o@P^:--..    Ad Astra Per Aspera" +"\n"+
+"       .@^  YUU[[[/o@^;::---..     Through Hardship To The Stars" +"\n"+
+"     oMP     ^/o@P^;:::---.." +"\n"+
+"  .dMMM    .o@^ ^;::---..." +"\n"+
+" dMMMMMMM@^`       `^^^^" +"\n"+
+"YMMMUP^" +"\n"+
+" ^^" +"\n"
+      console.log(text)
+    </script>
+  </head>
+  <body>
+    <!--begin schema microdata-->
+    <div id="schema" itemscope itemtype="http://schema.org/Article">
+      <h1 itemprop="name">{{ page.title }}</h1>
+      <img itemprop="image" src="{{ page.image }}" />
+      <p itemprop="description">{{ page.summary }}</p>
+    </div>
+    <!--end schema microdata-->
+    <div class="pure-g">
+      <div class="pure-u-1 header">
+        <div class="profile"></div>
+        <br>
+        <div class="name">
+          William Blankenship
+        </div>
+        <br>
+        <div class="description">
+          <a href='https://www.linkedin.com/in/wjblankenship' class="link" title="Blog"><i class="fa fa-linkedin"></i></a>
+          &nbsp; &nbsp;
+          <a href='http://github.com/wblankenship' class="link" title="GitHub"><i class="fa fa-github-alt"></i></a>
+          &nbsp; &nbsp;
+          <a href='http://twitter.com/wjblankenship' class="link" title="Twitter"><i class="fa fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+    {{ content }}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-62669903-1', 'auto');ga('require', 'linkid', 'linkid.js');ga('send', 'pageview');
+    </script>
+  </body>
+</html>

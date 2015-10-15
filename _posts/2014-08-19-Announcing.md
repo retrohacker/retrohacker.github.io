@@ -1,6 +1,7 @@
 ---
+  layout: default
   title: "NS Docker Images"
-  image: images/nodesource2.png
+  image: http://will.blankenship.io/images/nodesource2.png
   summary: NodeSource is rolling out a line of Docker images based on the binary Ubuntu and Debian distributions we maintain in collaboration with Chris Lea
 ---
 
@@ -53,13 +54,13 @@ Each distribution is built directly on top of the [official repositories](https:
 
 If you want to run an image based on Debian's *wheezy* release, for example, you would simply:
 
-```
+{% highlight bash %}
 $ docker pull nodesource/node:wheezy
-```
+{% endhighlight %}
 
 You can even quickly run a Node.js REPL in a container based on any of the images:
 
-```text
+{% highlight text %}
 $ docker run -t -i nodesource/node:trusty node
 > process.versions
 { http_parser: '1.0',
@@ -71,13 +72,13 @@ $ docker run -t -i nodesource/node:trusty node
   modules: '11',
   openssl: '1.0.1h' }
 >
-```
+{% endhighlight %}
 
 ### Containerizing Your Application
 
 A quick-start to containerizing your application involves placing a _Dockerfile_ in the root of your project directory, alongside your _package.json_ definition:
 
-```text
+{% highlight Dockerfile %}
 FROM nodesource/node:jessie
 
 ADD . /path/to/app
@@ -91,25 +92,25 @@ EXPOSE 8888
 
 # replace this with your startup command
 CMD [ "npm", "start" ]
-```
+{% endhighlight %}
 
 Build your image with:
 
-```text
+{% highlight text %}
 $ docker build -t="my_node_app" .
-```
+{% endhighlight %}
 
 And run with:
 
-```text
+{% highlight text %}
 $ docker run -dP my_node_app
-```
+{% endhighlight %}
 
 ### Mounting As A Volume
 
 If you want to run a Node.js application from the host filesystem, you can simply mount it:
 
-```text
+{% highlight Dockerfile %}
 FROM nodesource/node:jessie
 
 WORKDIR /path/to/app
@@ -119,19 +120,19 @@ EXPOSE 8888
 
 # replace this with your main "server" script file
 CMD [ "bash","-c", "npm install; npm start" ]
-```
+{% endhighlight %}
 
 Build your image with:
 
-```text
+{% highlight text %}
 $ docker build -t="my_node_app" .
-```
+{% endhighlight %}
 
 And run with:
 
-```text
+{% highlight text %}
 $ docker run -dPv /path/to/app:/path/to/app my_node_app
-```
+{% endhighlight %}
 
 You can even replace `npm start` with `npm test` if you want a containerized test environment for your application!
 

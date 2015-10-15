@@ -1,6 +1,7 @@
 ---
+  layout: default
   title: "Dockerizing Node.js"
-  image: images/docker.png
+  image: http://will.blankenship.io/images/docker.png
   summary: "How to reap huge benefits from using docker during Node.js development"
 ---
 
