@@ -1,5 +1,5 @@
 ---
-  layout: default
+  layout: post
   title: "Docker: Owning the Stack"
   image: http://will.blankenship.io/images/docker2.png
   summary: "The paradigm shift of “Stack as a Dependency”"

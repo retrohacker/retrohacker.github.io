@@ -1,5 +1,5 @@
 ---
-  layout: default
+  layout: post
   title: "What Docker Is"
   image: http://will.blankenship.io/images/docker2.png
   summary: "A mid-level overview of containers"

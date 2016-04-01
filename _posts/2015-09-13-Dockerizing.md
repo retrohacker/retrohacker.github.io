@@ -1,5 +1,5 @@
 ---
-  layout: default
+  layout: post
   title: "Dockerizing Node.js"
   image: http://will.blankenship.io/images/docker.png
   summary: "How to reap huge benefits from using docker during Node.js development"

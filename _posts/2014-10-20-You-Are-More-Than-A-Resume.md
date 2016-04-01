@@ -1,5 +1,5 @@
 ---
-  layout: default
+  layout: post
   title: "You are More Than A Resume"
   image: http://will.blankenship.io/images/career.png
   summary: "You are more than a resume (but you need one anyways)"

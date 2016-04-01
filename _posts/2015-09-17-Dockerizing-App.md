@@ -1,5 +1,5 @@
 ---
-  layout: default
+  layout: post
   title: "Dockerizing your Node.js Applications"
   image: http://will.blankenship.io/images/docker.png
   summary: "So you have Node apps, and you want to use them with Docker. In this tutorial, we will show you how to take your Node.js application and bake it into a Docker image."
