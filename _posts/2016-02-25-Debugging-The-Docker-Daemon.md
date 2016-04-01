@@ -58,7 +58,7 @@ $ go-torch --time=15 --file "docker.svg" --url http://[host_ip]:8080/debug/pprof
 
 This will give us an image like this: 
 
-![svg](../../../images/docker_profile.svg)
+![svg](/images/docker_profile.svg)
 
 The svg includes a link to some javascript in the repo, so if you open it in a webbrowser directly from your filesystem, it will be interactive.
 
