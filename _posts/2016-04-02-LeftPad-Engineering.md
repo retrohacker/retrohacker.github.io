@@ -66,7 +66,8 @@ I have been involved with the Node community for two years now. I vividly rememb
 
 This is something I have personally recommended since that conversation at JSConf. You as a company, or as an individual, are using a third party service that you have absolutely no control over. If continuity of your builds is important to you, you _absolutely_ need to have a buffer between you and that external service. The buffer between you and npm could be as simple as a [squid HTTP cache](http://www.squid-cache.org/) or [`npm --cache-min 999999`](https://github.com/npm/npm/issues/2568) to something as comprehensive as [Artifactory](https://www.jfrog.com/confluence/display/RTF/Npm+Repositories) or [Nexus](https://books.sonatype.com/nexus-book/reference/npm-configuring.html).
 
-Personally, I recommend [registry-static](https://github.com/davglass/registry-static). It has been battle tested by enterprise scale companies, it is entirely open source, and it is able to be backed by a custom datastore. You can drop registry-static on top of S3. Super light-weight, highly available, and guarantees that your build process won't be affected by fluctuations in npm.
+Personally, I recommend [registry-static](https://github.com/davglass/registry-static). It has been battle tested by enterprise scale companies, it is entirely open source, and it is able to be backed by a custom datastore. You can drop registry-static on top of S3. Super light-weight, highly available, and guarantees that your build process won't be affected by fluctuations in npm. In response to this event, registry-static now [supports ignoring unpublish requests from the upstream npm registry](https://github.com/davglass/registry-static/pull/65). Running this will protect you from the future removal of modules.
+
 
 ## Code dependencies
 
