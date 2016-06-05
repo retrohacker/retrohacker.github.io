@@ -8,15 +8,15 @@
 Debugging AT&T ASM with GAS and GDB
 ===================================
 
-This tutorial will walk you through debugging [amd64]() [AT&T ASM]() using the GNU `as` assembler and `gdb`. Why would you ever want to do this? More than likely you were sitting around bored drinking cocktails and decided to give assembly a try.
+This tutorial will walk you through debugging [amd64](https://www.wikiwand.com/en/X86-64) [AT&T ASM](https://www.wikiwand.com/en/X86_assembly_language#/Syntax) using the GNU `as` assembler and `gdb`. Why would you ever want to do this? More than likely you were sitting around bored drinking cocktails and decided to give assembly a try.
 
 # Following along
 
-If you are running an amd64 distribution of Linux, you just need [`gdb`](), [`ld`](), and [`as`]() installed. Otherwise, you need to download [VirtualBox]() and install [amd64 Linux]() to follow along. The distribution shouldn't matter.
+If you are running an amd64 distribution of Linux, you just need [`gdb`](https://www.gnu.org/software/gdb/), [`ld`](http://linux.die.net/man/1/ld), and [`as`](http://linux.die.net/man/1/as) installed. Otherwise, you need to download [VirtualBox](https://www.virtualbox.org/) and install [amd64 Linux](https://www.debian.org/distrib/) to follow along. The distribution shouldn't matter.
 
 ## Example Application
 
-We are going to use an example application that is fairly common. It comes from the book [Programming from the Ground Up]() by [Jonathan Bartlett](). In this example, we have attempted to take their code and port it to amd64 using the extra 32-bits of each register. This isn't out of necessity, but for a learning exercise -- in fact, only using the first 16-bits will dramatically increase portability. However, we have made a mistake somewhere, and our application is having unexpected output.
+We are going to use an example application that is fairly common. It comes from the book [Programming from the Ground Up](http://download-mirror.savannah.gnu.org/releases//pgubook/ProgrammingGroundUp-1-0-booksize.pdf) by Jonathan Bartlett. In this example, we have attempted to take their code and port it to amd64 using the extra 32-bits of each register. This isn't out of necessity, but for a learning exercise -- in fact, only using the first 16-bits will dramatically increase portability. However, we have made a mistake somewhere, and our application is having unexpected output.
 
 Essentially, what this application does is takes the list of numbers defined at the top and outputs the largest of them as the return value of the application. Simple stuff. Lets take a look at the code:
 
