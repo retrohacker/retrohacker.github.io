@@ -1,0 +1,75 @@
+==================================================================
+https://keybase.io/retrohacker
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://will.blankenship.io
+  * I am retrohacker (https://keybase.io/retrohacker) on keybase.
+  * I have a public key with fingerprint 7984 97C8 0979 5147 D4A1  442E 4AB0 DB6A 9DED D8C3
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "012055e2fc2c115b4a460d839979212946752943acc82348770b0e4a0b36c5d7d5d40a",
+            "fingerprint": "798497c809795147d4a1442e4ab0db6a9dedd8c3",
+            "host": "keybase.io",
+            "key_id": "4ab0db6a9dedd8c3",
+            "kid": "0101f14482dc308b106072deaf72c3b53017056b51c4c414b7728ae609a3194d46080a",
+            "uid": "c3b0877d325fa04adf68cda471c83819",
+            "username": "retrohacker"
+        },
+        "service": {
+            "hostname": "will.blankenship.io",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1470243821,
+    "expire_in": 157680000,
+    "prev": "ec355feff4ad89dff005a9d5537b79ad0f02fc621e603b1d95da0e7b19981720",
+    "seqno": 24,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.53
+Comment: https://keybase.io/crypto
+
+yMN3AnicbVJ/TFVVAH4QMESBV3Mh5VpcJ8qGeO7ve58GiAhGrcAf4Rj53v1xLlx4
+vPu67/KAEIOMDRBEAwQRGjgX6MAQJTQUQukXJcbMhKKasYFZlIS6NRx0Hul/nT/O
+2T3n+777fd85Q4FPmQK8krp+zGqeGbvq9fVga64p9cSamUJM1OQCzFKIZcOlBdpl
+6DKs2aqMWTCAE4CmIaFIhITjtEgJFANkjuR5lidwgqcYlkYzKUgSR5AUx7JABJAS
+gEgyEi2zMi1TQMAiMUV1ZEDdqasOA8myPEfxrMQBJEPjFCtTAk5RBCKKQBYZgZeh
+LHMSiYiZmsvDQOZEwQWjVA3toQ/rkr3/wT/xDXAFSXKELJGAE3HAAJaQoaCwhESK
+NAlwFtCMSOMSJVE4JbIswQmQAbxA4jwlo5Tcku/cJTlEASibTBK0IgBKkBWGk2SB
+YnGJIzmc9wBdUHcIORChdWjoWqYgZUMdK4rE0IFblaCnW0+Yx6A81W6PEu2CIxs6
+XJmq879kTl0zNEmzI0CmYTgtHr5R4FwiQNH6WMoqqg4ZFYoIbqi7VM2BWXCElAzV
+o40KBQRFcgQeicF8p6pDq+pB0CzDATQ8v4FuJAklkqYVqCgoEcfLigIAjbqkaZIV
+WV6QgQLQzTMEjoohRVzmaVkAkBVxnudwlgCYJ9xbDg2zEBTyKWQgTZea4RCMXB1i
+RVcG031MXgEmP19vz0szBSwzP3l/97LMpmMVRS31kaX900dHbteFf1a5uixs9reD
+RXUluM17oMkWvDvZfySHWaNPL1/xSGu9q2b9dDQ68HSsjxY0bxt51+xOH/5UDy3L
+i7hMvb1htuwv1/jCe52+KSH7ibp7RHDbuuDY1pHErh8sV6e9qxJ+2fjNqgmY1hgz
+twnE3z3Zce1Ow23fc4OlKw9vSavcNXve/Nr9iUtXEnmvxbG2sX2N+68lg+7fnVsz
+lrccWNux83zQO8VbV8acudj7sG5PhM/wprln7MenCrd9vG5IT7D1XfjWcahmS/j7
+HTUHeyN/7vGrY3vW79gYcpaIS6+BRvUL/oW72smBjtoSp4/N/UrCme7vTneWpx5q
+t4dsV7WvJucueZ982Wz7s2AxuqFz86+f7PmiK6Y46VTprYLjJUJgx+jOVQuumSM7
+ErNv+vKjaU2vT9z0yuscSHrJxBRXz/dXPPvlVG3f0ECa8Hdy07aWisLUYx/Vi8ty
+LwS+OJphLi15vnbfit05QV7hIVjzkRsNYVPPWfZWvcoccIylDAVfxk58sHe698Ej
+tjGfvZ7iro//5xY9+SD2oRLV00h+3kBJ/qEbrKHFbiM63r+6ZP28NxZf3rz4Rp/P
+/YXSc2kt05Ob14aNX++7ExJQfTHAWBw6nDCef6ptuD+n3y9usqp8fOHN9u99u5/+
+sD5uvrnc0vfHTER1grj6bGUMfmPyX9usw8Y=
+=piY0
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/retrohacker
+
+==================================================================
