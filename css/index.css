@@ -93,6 +93,14 @@ h1.section-head {
 .nodesource {
   background-image: url('/images/nodesource.png');
 }
+
+.storj {
+  background-image: url('/images/storj.png');
+}
+
+.netflix {
+  background-image: url('/images/netflix.png');
+}
 .siuc {
   background-image: url('/images/siuc.png');
 }
