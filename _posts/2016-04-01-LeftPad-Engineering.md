@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "left-pad and Proper Engineering Principles"
-  image: http://will.blankenship.io/images/npm.png
+  image: http://blankenship.io/images/npm.png
   summary: "Why #npmgate wasn't surprising"
 ---
 

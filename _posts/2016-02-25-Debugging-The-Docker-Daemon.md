@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "Debugging the Docker Daemon"
-  image: http://will.blankenship.io/images/docker_profile.png
+  image: http://blankenship.io/images/docker_profile.png
   summary: "Do you need more insight into what the Docker Daemon is doing?"
 ---
 

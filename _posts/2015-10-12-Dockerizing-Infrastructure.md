@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "Dockerizing your Node.js Infrastructure"
-  image: http://will.blankenship.io/images/docker.png
+  image: http://blankenship.io/images/docker.png
   summary: "In our last walk through, we tackled taking a Node.js application and getting it inside of a Docker container. This time around, we are going to look at Dockerizing our entire infrastructure."
 ---
 

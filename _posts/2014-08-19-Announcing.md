@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "NS Docker Images"
-  image: http://will.blankenship.io/images/nodesource2.png
+  image: http://blankenship.io/images/nodesource2.png
   summary: NodeSource is rolling out a line of Docker images based on the binary Ubuntu and Debian distributions we maintain in collaboration with Chris Lea
 ---
 

@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "Automatically Populating a known_hosts File"
-  image: http://will.blankenship.io/images/tux.png
+  image: http://blankenship.io/images/tux.png
   summary: "So you are automating some service that needs to communicate over ssh. Why not just ignore the authenticity warning and press on with your day?"
 ---
 

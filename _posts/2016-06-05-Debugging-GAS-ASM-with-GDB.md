@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "Debugging AT&T ASM with GAS and GDB"
-  image: http://will.blankenship.io/images/gas_gdb.png
+  image: http://blankenship.io/images/gas_gdb.png
   summary: "A brief stumble into assembly"
 ---
 

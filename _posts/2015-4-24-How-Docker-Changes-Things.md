@@ -1,7 +1,7 @@
 ---
   layout: post
   title: "How Docker Changes Things"
-  image: http://will.blankenship.io/images/docker2.png
+  image: http://blankenship.io/images/docker2.png
   summary: "A philosophical stance for DevOps"
 ---
 
