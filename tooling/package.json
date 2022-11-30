@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "lint": "scripty"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1",
+    "scripty": "^2.1.1"
+  }
+}

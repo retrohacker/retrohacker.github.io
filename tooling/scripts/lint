@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+cd ../
+prettier \
+  --write \
+  --print-width 250 \
+  .
