@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" />
+    <title>William Blankenship</title>
+  </head>
+  <body>
+    <p><a href="../../">Home</a> <a href="../">Posts</a></p>
+    <h1>GraphQL Mental Models</h1>
+    <p>
+      I help organizations adopt GraphQL. The most demanding part of these projects is getting cross-functional alignment to drive schema design. I have found myself needing to craft messaging that would quickly bring teams up to speed on the problem
+      we were solving and how GraphQL would fit into their roadmaps.
+    </p>
+    <p>
+      After going through this exercise, I suspect my situation isn't unique. GraphQL is still a nascent technology. Bringing it into an organization, you may find many who've heard of it in name only. I'm documenting the mental models I've used to
+      quickly "upload" context to other folks to prime conversations around GraphQL; maybe these will help you too!
+    </p>
+    <h2>Mental Model 1: GraphQL as a Server API</h2>
+    <aside>This mental model helps frame the problem we are solving. It is most useful when presenting to a large technical organization ahead of demoing a schema through something like GraphiQL or voyager.</aside>
+    <p>
+      How did we as an industry end up at GraphQL? Why did multiple companies come up with similar solutions around the same time (i.e. Netflix's Falcor)? Let's take a quick (super oversimplified) look at the series of events that brought us here.
+    </p>
+    <p>
+      GraphQL has its roots in the application web, not the document web. When we started to explore delivering application experiences through a web browser (the early days between Web 1.0 and Web 2.0), we usually had a 1:1 mapping between views and
+      backend endpoints. You'd reach out to the <code class="inline">/home</code> endpoint then a CGI script would handle fetching all of the data needed to hydrate the UI and return it all in one response. Not only would it return the data, but it
+      would also fully hydrate the UI for you and return the final HTML payload.
+    </p>
+    <img width="1046px" height="474px" src="https://docs.google.com/drawings/d/e/2PACX-1vT3cog-Y0_dJoQZzlMBPf4-oYqAJXJ6wL8KVeHbr5Is_e8p3LR4jq5Fe7n9Mu1mCb3TWL6CYNHwCbZl/pub?w=1046&amp;h=474" />
+    <img width="851px" height="169px" src="https://docs.google.com/drawings/d/e/2PACX-1vTIg6udWGc-T_vPA5ruYRXb7bZhH55bJUYO7-co_lVTYV3Bkr_O1_W88PGH48Q_onfD0diTRsa0kqDJ/pub?w=851&amp;h=169" />
+    <p>
+      The number of views in an application started growing rapidly. We had multiple user personas, each persona had many states, and we had to support an ever-growing variety of devices. Not to mention we wanted to share the same APIs across native
+      applications and our Web 2.0 applications!
+    </p>
+    <p>
+      To scale development, we broke the UI up into components. A view became a collection of components. Similarly, the backend server was broken up into separate endpoints that exposed portions of the application's data model. Using something like
+      AJAX, the page would kick off a series of requests to the backend server to fetch data that would be used to hydrate these components.
+    </p>
+    <img width="1046px" height="474px" src="https://docs.google.com/drawings/d/e/2PACX-1vTO16padth3kfNk56Up8UXeI8pNfEqUmtelMAc-7Tmw5hpHCx_e5z4VHquI2WKmkPYGL_wogXEdgAeE/pub?w=1046&amp;h=474" />
+    <img src="https://docs.google.com/drawings/d/e/2PACX-1vSdQurrPbNHHMEXYmFkLrDHsPS-URKa6YKokvGuaUQMJOeQkHVULitzTi-2KRFkHc4-AHfQNblVBVbF/pub?w=851&amp;h=169" />
+    <p>
+      As organizations scaled to build applications on the web, oftentimes team boundaries would be drawn between the UI and the server API. This means the same engineer wouldn't be working on both the backend API and a UI component. Hidden in this
+      multi-team relationship are two constraints that are difficult to reconcile.
+    </p>
+    <p>
+      On the one hand, the backend team has been tasked with building endpoints that are specific enough to meet the UI's needs without wasting resources like processing time and bandwidth. On the other hand, the backend team has been tasked with
+      building an API that is generic enough to support the entirety of the current UI along with much of its future innovation.
+    </p>
+    <p>
+      If your API is too generic, you are going to waste both server and client resources by sending large responses back to the client. This will eat up your customer's data on mobile connections, slow down the user experience, and increase hosting
+      costs. We call this "over fetching." If your API is too specific, every change to the UI is going to require one or more corresponding changes to the API. Get that wrong and your team is going to be unpopular for slowing the company down.
+    </p>
+    <img width="1046px" height="474px" src="https://docs.google.com/drawings/d/e/2PACX-1vTcmvyNufVtwNG14OrVyeZPMQtPxzad_xVZO0a56E2C2qjq6de8__Ml1tGPW0RVPMyfMK6P0HEfWPUQ/pub?w=1046&amp;h=474" />
+    <img width="851px" height="169px" src="https://docs.google.com/drawings/d/e/2PACX-1vSVFRnZN2goRf0O3x5YmIGlUNYu9Mkn8FHosgeKBr6AMI762MhDey6hiTj5tbc2Pzu9iYQaPBMIwqlQ/pub?w=851&amp;h=169" />
+    <p>
+      To solve this, what we are trying to do is go back to where we started: a single endpoint that can hydrate a webpage. But our needs have changed. Our applications no longer need a fully hydrated HTML payload from the server. Our views are made
+      up of components, each of which has its own data needs. Some of these components may already be hydrated from previous views. We want an endpoint that is simultaneously generic enough to support most UI innovation with little-to-no backend
+      changes while specific enough to deliver exactly what the UI needs when it needs it.
+    </p>
+    <p>This is GraphQL. And, instead of an endpoint per view, we get one endpoint to rule them all!</p>
+    <h2>Mental Model 2: GraphQL as a Database-like Gateway</h2>
+    <aside>
+      This mental model helps us think about schema design. It is most useful when engaging with backend API teams trying to understand how their existing data models will compose with GraphQL. It is also helpful when working with UI teams to guide
+      data modeling exercises.
+    </aside>
+    <p>
+      We want to empower UI teams to self-service most of their data needs without being blocked by backend engineering work. One way to let clients fully service their own data needs is to give them direct access to a database. When our API is a
+      database, instead of worrying about each query a client makes, we focus on modeling and optimizing the data the client will need, securing data access, and adding safe guards ensuring clients can't overwhelm the database with queries. Clients
+      are free to query that data however they like and only need to loop in backend engineers when the database models are insufficient or their queries are slow. So why don't most projects do this?
+    </p>
+    <p>You might remember this diagram from the previous section:</p>
+    <img src="https://docs.google.com/drawings/d/e/2PACX-1vSdQurrPbNHHMEXYmFkLrDHsPS-URKa6YKokvGuaUQMJOeQkHVULitzTi-2KRFkHc4-AHfQNblVBVbF/pub?w=851&amp;h=169" />
+    <p>For most companies, this diagram is oversimplified. In reality, there is a whole lot of infrastructure and business logic sitting between your company's gateway servers and the backend databases.</p>
+    <p>
+      Pushing all of that business logic to the client isn't practical. It increases the complexity of the clients, forces every device team to re-implement (or find a way to share) that logic between their applications, and there are cases where the
+      client can't be trusted with business logic.
+    </p>
+    <p>
+      What we want is a database-like API on top of our backend infrastructure. This keeps the business logic server-side while allowing clients to query the servers as if they were a database. This is what GraphQL gives us. Like our REST API, the
+      GraphQL server acts as a Gateway routing requests to many backend services. True to its namesake, GraphQL exposes the data from backend services as a directed graph that can be queried using a query language. Instead of focusing on endpoints,
+      our backend teams focus on providing the right data models and access controls for client teams to query what they need.
+    </p>
+    <p>Let's take a look at an example GraphQL schema:</p>
+    <img width="928px" height="201px" src="https://docs.google.com/drawings/d/e/2PACX-1vSPDrXWEUdMNSLlyop8D8vOOUdfnIplsmzp-jj2nqKGndf3SGjvs21C35DXJ3HQ_scX65L4g0RbX2ks/pub?w=928&h=201" />
+    <p>
+      The types <code class="inline language-plaintext">Post</code>,<code class="inline language-plaintext">Comment</code>, and <code class="inline language-plaintext">User</code> look like SQL Tables and the connections between them look like joins.
+      With REST, the UI team is responsible for doing client-side joins across multiple backend endpoints. GraphQL supports multi-service joins natively abstracting this away from UI teams.
+    </p>
+    <p>
+      Multi-service joins are useful to backend teams too. In REST, your service is expected to return all of the context a client needs to make sense of your data; your endpoint is expected to stand on its own. In GraphQL, your service's data is
+      associated with other services' data through connections in the graph. The user service doesn't need to return data about posts or comments. At most, services need to track the "primary keys" that will allow GraphQL to associate data between
+      services.
+    </p>
+    <p>
+      Joins also give you the ability to extend and enrich data returned from other services with application specific data. For example, an Admin service could extend the <code class="inline language-plaintext">Post</code> type with fields only
+      relevant to administrative users; GraphQL will handle stitching it together in the schema.
+    </p>
+    <h2>Mental Model 3: GraphQL as a REST Server</h2>
+    <aside>I've found this mental model helps us reason about the surface area a GraphQL API exposes. It has been useful for conversations with InfoSec and backend engineers who are already familiar with securing REST APIs.</aside>
+    <p>
+      Query and Mutation fields are similar to GET and POST/PUT requests. The query <code class="inline">getPosts(userId:string)</code> translates fairly well to <code class="inline">GET /posts/${userId}/</code>. You pass in some query parameters and
+      get a response back out. At this point, there is little value in using GraphQL over REST.
+    </p>
+    <p>A GraphQL request can contain multiple queries. For example:</p>
+    <pre>
+      <code class="language-graphql">
+query {
+  getPosts(userId:string)
+  getProfilePicture(userId:string)
+  getNotifications()
+}
+      </code>
+    </pre>
+    <p>
+      This lets you send a single request over the wire and get back multiple payloads. This is similar to issuing three GET requests using HTTP pipelining. At this point, there is little value in using GraphQL instead of REST over a pipelined
+      connection.
+    </p>
+    <p>
+      So we have something roughly equivalent to a REST API sending responses over a pipelined HTTP connection. But what if the client doesn't need the full response? In REST, you can create query parameters that filter responses or add dedicated
+      batch endpoints. But this kind of filtering adds significant complexity to your API and has to be done ad-hoc as use cases pop up. As REST APIs structured like this continue to grow, their query parameters start looking suspiciously like a
+      query language bolted onto a REST API. In contrast, GraphQL bakes filtering in through its Query Language.
+    </p>
+    <p>
+      Imagine a use case for the <code class="inline">getNotifications</code> query above: you want to display a badge that shows the user how many notifications they have. But the <code class="inline">getNotifcations</code> endpoint returns the
+      entire notification object (including the subject, description, timestamp, and various linked objects associated with the notification like posts and user information). If you send all of that data over the wire, the client is going to
+      disregard it and just count the number of returned elements in the array to display the badge. Instead, with GraphQL, the client could issue this request:
+    </p>
+    <pre>
+      <code class="language-graphql">
+query {
+  getNotifications {
+    id
+  }
+}
+      </code>
+    </pre>
+    <p>This lets the client get back a list of all the notification ids, a substantially smaller payload. This filtering is available to all queries without any additional backend engineering work.</p>
+    <p>
+      In a REST api, you might split nested objects up over separate endpoints to reduce the chance a client has to over-fetch to get the data they need. In GraphQL you can nest away; the client can tell the server it isn't interested in a nested
+      object by omitting it from the query.
+    </p>
+    <p>
+      Thinking about a query as a "filter" can help us reason about the surface area of our GraphQL API. Instead of looking at this like an SQL query with infinite possibilities, we invert the mental model and think instead of the fully expanded REST
+      payload with a filter applied. The fully expanded REST payload - before filtering is applied - is our API surface area.
+    </p>
+    <h2>What Do You Think?</h2>
+    <p>
+      These are my mental models for GraphQL - I'm sure there is room for improvement. What do you think? Do these resonate with you? Do you think about GraphQL differently? Are you working on a GraphQL project? Reach out at
+      <a href="mailto:graphql@blankenship.io">graphql@blankenship.io</a> - I'd love to chat!
+    </p>
+    <aside>P.S. If you are taking a GraphQL server to production, Marc-Andre Giroux's <a href="https://book.productionreadygraphql.com/">Production Ready GraphQL</a> is essential reading.</aside>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+      document.querySelectorAll("code").forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document.querySelectorAll("code.inline").forEach((v) => hljs.highlightElement(v));
+    </script>
+  </body>
+</html>

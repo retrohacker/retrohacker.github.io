@@ -1,5 +1,4 @@
 body {
-  font-family: "Hack", serif;
   margin: 0 auto;
   padding: 50px 15px;
   line-height: 1.4;
@@ -15,4 +14,25 @@ body {
 .symbol a {
   color: black;
   text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+pre.inline {
+  display: inline;
+}
+
+code.inline {
+  display: inline;
+}
+
+aside {
+  padding: 1em;
+  font-size: 0.9em;
+  border-left: 0.25em solid #ccc;
+  margin-left: 0.75em;
+  font-style: italic;
 }
