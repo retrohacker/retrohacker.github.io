@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" />
+    <title>William Blankenship</title>
+  </head>
+  <body>
+    <p><a href="../../">Home</a> <a href="../">Posts</a></p>
+    <h1>Procedurally generated mocks</h1>
+    <p>
+      Mock data has always been a bummer for me to work with. It takes a long time to create and there isnt much of it. I started using a pattern that I think is clever: using a deterministic seed for a random number generator for generating mock
+      data. This gives me infinite mock data! Perhaps this is too clever? Im interested in hearing your thoughts on it.
+    </p>
+    <pre>
+      <code>
+import { Chance } from 'chance'
+
+function getUserById(id: number) {
+  const chance = new Chance(id)
+  return {
+    name: chance.name(),
+    email: chance.email(),
+    phoneNumber: chance.phone()
+  }
+}
+
+// Both of these will return consistent values on all machines
+// across time and space!
+getUserById(1)
+getUserById(42)
+      </code>
+    </pre>
+    <p>
+      I recently needed a massive amount of mock data to power a GraphQL API. This data was going to be used by UI engineers wiring queries up to their UI components. The data needed to be convincing and stable, meaning the same request issued
+      multiple times consecutively should always return the same data. Likewise, you should be able to fetch a collection in one request (i.e. get all users on a project) and then filter that collection in a subsequent request (i.e. get all users on
+      a project whose email contains @gmail.com).
+    </p>
+    <p>
+      This pattern seems to be especially powerful in GraphQL where each resolver has one or more primary keys for fetching its data. For example, the resolver for a User object might use the primary key UserID. This key is perfect to seed an RNG
+      with! Look out for a follow up blog post showing how to use this pattern in GraphQL.
+    </p>
+    <p>
+      The main footgun I've observed with this is that the mocks are only stable if you generate the same object. This is pretty obvious in hindsight but can catch you off guard. For example, if you add a field to an object, every randomly generated
+      value after that field will change. It also means conditional logic should be applied after a complete mock has been generated. For example, if you want to select a subset of objects, generate the entire list first and only then filter it.
+    </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+      document.querySelectorAll("code").forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document.querySelectorAll("code.inline").forEach((v) => hljs.highlightElement(v));
+    </script>
+  </body>
+</html>
