@@ -46,6 +46,11 @@ getUserById(42)
       The main footgun I've observed with this is that the mocks are only stable if you generate the same object. This is pretty obvious in hindsight but can catch you off guard. For example, if you add a field to an object, every randomly generated
       value after that field will change. It also means conditional logic should be applied after a complete mock has been generated. For example, if you want to select a subset of objects, generate the entire list first and only then filter it.
     </p>
+    <h2>What do You Think?</h2>
+    <p>
+      How do you handle mock data? Is this something you would use? See any problems? Would love to hear from you, reach out at
+      <a href="mailto:mocks@blankenship.io">mocks@blankenship.io</a> - I'd love to chat!
+    </p>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>
       hljs.highlightAll();
