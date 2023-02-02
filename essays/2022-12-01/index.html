@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../index.css" />
     <link rel="stylesheet" href="./index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+    />
     <title>William Blankenship</title>
   </head>
   <body>
@@ -17,20 +20,39 @@
       <li>Data structures used to translate between types (1) and (2)</li>
     </ol>
     <p>
-      GraphQL gives you strong type guarantees out of the box with its schema. If you pair that with something like Nexus, typescript's type system is aware of these types and can do type-checking on your arguments and the values you return from your
-      resolvers.
+      GraphQL gives you strong type guarantees out of the box with its schema.
+      If you pair that with something like Nexus, typescript's type system is
+      aware of these types and can do type-checking on your arguments and the
+      values you return from your resolvers.
     </p>
     <p>
-      Likewise, typescript gives you strong guarantees about (3). Where the type system falls short is handling data from other services. Unless you are using a strongly typed protocol for RPC (i.e. talking to another GraphQL service, gRPC, or
-      apache-thrift) the structure of the data you get back from an RPC call is unknown. Most of us use JSON for RPC, and typescript doesn't have a built-in JSON type (<code class="inline">JSON.parse</code> returns
-      <code class="inline language-ts">any</code>).
+      Likewise, typescript gives you strong guarantees about (3). Where the type
+      system falls short is handling data from other services. Unless you are
+      using a strongly typed protocol for RPC (i.e. talking to another GraphQL
+      service, gRPC, or apache-thrift) the structure of the data you get back
+      from an RPC call is unknown. Most of us use JSON for RPC, and typescript
+      doesn't have a built-in JSON type (<code class="inline">JSON.parse</code>
+      returns <code class="inline language-ts">any</code>).
     </p>
     <p>
-      Originally I used <code class="inline language-ts">any</code> for these types, which turned off type checking. But I observed several cases where the payload coming over RPC didn't match my expectations and I hadn't properly sanitized the data,
-      causing an exception to be thrown.
+      Originally I used <code class="inline language-ts">any</code> for these
+      types, which turned off type checking. But I observed several cases where
+      the payload coming over RPC didn't match my expectations and I hadn't
+      properly sanitized the data, causing an exception to be thrown.
     </p>
-    <p>Next, I tried using <code class="inline language-ts">unknown</code> for these types. But type narrowing an unknown object is a <a href="https://github.com/microsoft/TypeScript/issues/25720">big pain</a>.</p>
-    <p>Finally, I settled on a custom set of JSON types (borrowed from <a href="https://github.com/microsoft/TypeScript/issues/1897#issuecomment-331765301">niedzielski</a>):</p>
+    <p>
+      Next, I tried using <code class="inline language-ts">unknown</code> for
+      these types. But type narrowing an unknown object is a
+      <a href="https://github.com/microsoft/TypeScript/issues/25720">big pain</a
+      >.
+    </p>
+    <p>
+      Finally, I settled on a custom set of JSON types (borrowed from
+      <a
+        href="https://github.com/microsoft/TypeScript/issues/1897#issuecomment-331765301"
+        >niedzielski</a
+      >):
+    </p>
     <pre>
       <code class="language-ts">
 export type JsonPrimitive = string | number | boolean | null
@@ -40,8 +62,11 @@ export type JsonArray = JsonValue[]
       </code>
     </pre>
     <p>
-      These types allow me to use type narrowing on the object and will raise type errors if I don't properly verify the incoming data I'm working with. This makes it easy to know that the types I'm getting over the wire match up correctly with the
-      types I'm sending back out in GraphQL. To wrap things up, here is an example resolver:
+      These types allow me to use type narrowing on the object and will raise
+      type errors if I don't properly verify the incoming data I'm working with.
+      This makes it easy to know that the types I'm getting over the wire match
+      up correctly with the types I'm sending back out in GraphQL. To wrap
+      things up, here is an example resolver:
     </p>
     <pre>
       <code>
@@ -94,13 +119,27 @@ const getUserById = queryField("getUserById", {
       </code>
     </pre>
     <h2>What do you think?</h2>
-    <p>How do you handle untrusted data in Typescript? Do you have a favorite pattern for sanitizing JSON input? I'd love to hear from you: <a href="mailto:essays@blankenship.io">essays@blankenship.io</a></p>
-    <aside>P.S.: If you like this pattern, you can use these types in your own project via <a href="https://npmjs.com/package/@retrohacker/json-types">@retrohacker/json-types</a></aside>
+    <p>
+      How do you handle untrusted data in Typescript? Do you have a favorite
+      pattern for sanitizing JSON input? I'd love to hear from you:
+      <a href="mailto:essays@blankenship.io">essays@blankenship.io</a>
+    </p>
+    <aside>
+      P.S.: If you like this pattern, you can use these types in your own
+      project via
+      <a href="https://npmjs.com/package/@retrohacker/json-types"
+        >@retrohacker/json-types</a
+      >
+    </aside>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>
       hljs.highlightAll();
-      document.querySelectorAll("code").forEach((v) => (v.innerHTML = v.innerHTML.trim()));
-      document.querySelectorAll("code.inline").forEach((v) => hljs.highlightElement(v));
+      document
+        .querySelectorAll("code")
+        .forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document
+        .querySelectorAll("code.inline")
+        .forEach((v) => hljs.highlightElement(v));
     </script>
   </body>
 </html>

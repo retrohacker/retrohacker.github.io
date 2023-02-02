@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "python3 -m http.server",
+    "prelint:watch": "npm run lint",
+    "lint:watch": "onchange '**/*' -- prettier --write -u {{file}}",
+    "lint": "prettier --write -u ."
+  },
+  "devDependencies": {
+    "@fastify/static": "^6.6.0",
+    "fastify": "^4.10.2",
+    "onchange": "^7.1.0",
+    "pino-pretty": "^9.1.1",
+    "prettier": "^2.8.1"
+  }
+}

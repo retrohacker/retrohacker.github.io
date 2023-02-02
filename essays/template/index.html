@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../index.css" />
     <link rel="stylesheet" href="./index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+    />
     <title>William Blankenship</title>
   </head>
   <body>
@@ -15,12 +18,18 @@
         console.log("testing")
       </code>
     </pre>
-    <p>Testing <code class="inline">console.log("hello world")</code> testing</p>
+    <p>
+      Testing <code class="inline">console.log("hello world")</code> testing
+    </p>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>
       hljs.highlightAll();
-      document.querySelectorAll("code").forEach((v) => (v.innerHTML = v.innerHTML.trim()));
-      document.querySelectorAll("code.inline").forEach((v) => hljs.highlightElement(v));
+      document
+        .querySelectorAll("code")
+        .forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document
+        .querySelectorAll("code.inline")
+        .forEach((v) => hljs.highlightElement(v));
     </script>
   </body>
 </html>
