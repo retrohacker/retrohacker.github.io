@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+    />
+    <title>William Blankenship</title>
+  </head>
+  <body>
+    <p><a href="../../">Home</a> > <a href="../">Essays</a></p>
+    <h1 id="a-checklist-for-building-graphql">
+      A Checklist for Building GraphQL
+    </h1>
+    <p>
+      Are you ready to adopt GraphQL and budget out the costs of building,
+      maintaining, and operating this system for your organization? If so, this
+      essay is for you. I&#39;m going to walk you through the engineers and
+      engineering investments you&#39;ll need to make to be successful with
+      GraphQL.
+    </p>
+    <p>
+      It&#39;s worth noting that there are GraphQL vendors that can provide
+      these requirements as a service. When vetting these vendors, this essay
+      can help guide you in evaluating whether a vendor is right for your
+      organization. Just take each requirement listed here and consider whether
+      the vendor can handle it for you. If so, you&#39;ve found a great partner.
+    </p>
+    <h2 id="need-help-">Need Help?</h2>
+    <p>
+      If you read this article and feel like you could use some help, I can help
+      you build a GraphQL service and team. Reach out to me at
+      <a href="consulting@blankenship.io">consulting@blankenship.io</a>
+    </p>
+    <h2 id="how-many-engineers-">How many Engineers?</h2>
+    <p>
+      Let&#39;s begin by tallying up the engineers we&#39;ll need to run this
+      service.
+    </p>
+    <p>
+      You don&#39;t need an entire team of experienced GraphQL engineers to make
+      this architecture work, but you should have at least two engineers who can
+      mentor others through code reviews and support the team during difficult
+      incidents.
+    </p>
+    <p>
+      These engineers will be responsible for the architecture of your GraphQL
+      service, reviewing code when their team members suggest changes to the
+      service or schema, and responding to any incidents.
+    </p>
+    <p>
+      Why two? Redundancy. If we only have one, they&#39;ll be on-call 24/7 and
+      become a bottleneck for all major work in that codebase.
+    </p>
+    <p>
+      These two engineers need to be well-versed in GraphQL schema design to
+      make sure the schema:
+    </p>
+    <ul>
+      <li>is well-connected for client queries</li>
+      <li>makes it easy to represent valid states</li>
+      <li>makes it difficult to query for invalid states</li>
+      <li>
+        is performant given the downstream services that are being queried
+      </li>
+      <li>makes it easy to apply a layer of access controls over the schema</li>
+      <li>is consistent in how users access data across models and domains</li>
+    </ul>
+    <p>
+      They should also be experienced in building and maintaining the GraphQL
+      tooling in the following section.
+    </p>
+    <h2 id="tooling">Tooling</h2>
+    <p>
+      Next, we&#39;re going to need to invest in some tooling. Let&#39;s break
+      down the minimum investments we&#39;ll need to make.
+    </p>
+    <h2 id="runtime-safety">Runtime safety</h2>
+    <p>
+      We need to protect our server against misbehaving clients and malicious
+      users.
+    </p>
+    <p>
+      We&#39;ll need query complexity guards to make sure a single query, or a
+      few well-crafted queries, can&#39;t act as a denial-of-service attack
+      against our backend infrastructure.
+    </p>
+    <p>
+      We&#39;ll also need an access control layer to ensure the user&#39;s
+      credentials making the query can access the data the query would return.
+    </p>
+    <p>
+      Without these safety checks, a malicious user can help our company make
+      the news for the wrong reasons.
+    </p>
+    <h2 id="introspection">Introspection</h2>
+    <p>
+      We&#39;ll need to be prepared for when this service starts misbehaving.
+    </p>
+    <p>
+      Tracing data is essential. These traces should connect an incoming query
+      to its performance characteristics. At the very least, this should show
+      the query and the resolvers that were fired. An ideal setup would also
+      link the tracing data from our GraphQL service to the tracing data in
+      downstream services used to resolve the query.
+    </p>
+    <p>
+      Health metrics are also important. We need to track the shape, size, and
+      volume of incoming queries, the resolvers being invoked and their
+      performance characteristics, requests to downstream services, and the
+      overall performance of our API. These are in addition to our standard HTTP
+      and host metrics we are used to collecting for other services.
+    </p>
+    <p>
+      We are going to have a large number of traces. The metrics help us
+      identify the rough characteristics of queries that might be causing
+      problems. This helps us sift through those traces to find the likely
+      culprits during an incident.
+    </p>
+    <h2 id="alerts">Alerts</h2>
+    <p>
+      Finally, we&#39;ll need to set up alerts that page out to the GraphQL team
+      when the performance of our service degrades, or when our access control
+      layer indicates that a malicious user may be attempting to search for
+      vulnerabilities in our schema.
+    </p>
+    <p>
+      This can be particularly tricky. GraphQL is similar to an API Gateway and
+      its performance characteristics are tightly coupled to the performance
+      characteristics of downstream services. If we don&#39;t take care when
+      constructing our metrics and alerts, we&#39;ll find that the GraphQL team
+      gets paged for every incident in the company.
+    </p>
+    <h2 id="conclusion">Conclusion</h2>
+    <p>
+      If you&#39;re paying close attention, you&#39;ll observe that the
+      engineering skillset you&#39;re searching for is quite similar to that of
+      a database engineer. They are responsible for designing schemas and the
+      tools they use to implement them are quite similar to those used for
+      PostgreSQL.
+    </p>
+    <p>
+      It&#39;s important to remember that this is just the basic set of
+      requirements you&#39;ll need to safely operate a GraphQL service. As you
+      scale, there are plenty of performance optimizations and architecture
+      designs you will need to explore down the road.
+    </p>
+    <p>
+      I&#39;m always interested in feedback and good conversations. Email me at
+      <a href="mailto:essays@blankenship.io">essays@blankenship.io</a>
+    </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+      document
+        .querySelectorAll("code")
+        .forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document
+        .querySelectorAll("code.inline")
+        .forEach((v) => hljs.highlightElement(v));
+    </script>
+  </body>
+</html>
