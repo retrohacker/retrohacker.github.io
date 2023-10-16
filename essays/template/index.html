@@ -18,6 +18,12 @@
         console.log("testing")
       </code>
     </pre>
+    <pre class="mermaid">
+      graph TD
+      A[Client] --> B[Load Balancer]
+      B --> C[Server01]
+      B --> D[Server02]
+    </pre>
     <p>
       Testing <code class="inline">console.log("hello world")</code> testing
     </p>
@@ -30,6 +36,10 @@
       document
         .querySelectorAll("code.inline")
         .forEach((v) => hljs.highlightElement(v));
+    </script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true });
     </script>
   </body>
 </html>
