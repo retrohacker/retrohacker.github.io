@@ -30,8 +30,12 @@ feed.addItem({
   title: "001: Dave Huseby",
   description:
     "Dave Huseby, founder of Cryptid and community organizer for libp2p.",
-  url: "http://www.blankenship.io/trimtab/001-huseby/podcast.mp3",
+  url: "https://www.blankenship.io/trimtab",
   date: "April 4, 2024",
+  enclosure: {
+    url: "https://blankenship.io/trimtab/001-huseby/podcast.mp3",
+    file: "./001-huseby/podcast.mp3",
+  },
 });
 
 const xml = feed.buildXml();
