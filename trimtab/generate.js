@@ -5,7 +5,7 @@ const feed = new Podcast({
   description: "The Peer-to-Peer Podcast.",
   feedUrl: "https://blankenship.io/trimtab/rss.xml",
   siteUrl: "https://blankenship.io/trimtab",
-  imageUrl: "https://blankenship.io/trimtab/cover.png",
+  imageUrl: "https://blankenship.io/trimtab/cover.jpg",
   author: "William Blankenship",
   managingEditor: "William Blankenship",
   webMaster: "William Blankenship",
@@ -23,7 +23,7 @@ const feed = new Podcast({
       text: "Technology",
     },
   ],
-  itunesImage: "https://blankenship.io/trimtab/cover.png",
+  itunesImage: "https://blankenship.io/trimtab/cover.jpg",
 });
 
 feed.addItem({
