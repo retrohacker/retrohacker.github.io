@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+    />
+    <title>William Blankenship</title>
+  </head>
+  <body>
+    <p><a href="../../">Home</a> > <a href="../">Essays</a></p>
+    <h1>NAT Traversal</h1>
+    <aside>
+      I fundamentally misunderstood what NAT traversal was and how it worked, so
+      I’m documenting it here for future travelers.
+      <br />
+      <br />
+      I’m also not an expert in any of this. Portions of this may be wrong!
+      <br />
+      <br />
+      Don’t hesitate to comment on anything that looks incorrect to you. Most of
+      this is sourced from
+      <a href="https://tailscale.com/blog/how-nat-traversal-works/"
+        >Tailscale’s blog</a
+      >.
+    </aside>
+    <h1>Packets flow in both directions</h1>
+    <p>
+      When writing software, we use terms like “opening a connection” or
+      “sending a response and getting a reply.” In my head, when thinking about
+      this from a software perspective, there is a magic tunnel where a “server”
+      can send a “response” back to a “client” without the “client” having to
+      run a “server.”
+    </p>
+    <p>
+      This is an illusion, a convenient abstraction provided by the networking
+      layer. Underneath that layer, a packet going to the server looks nearly
+      indistinguishable from a packet going to the client, especially with UDP.
+      When a client makes a request to a server it opens up a transient port to
+      accept a response. It then sends a packet to the server and the server
+      sends a packet back to that open port.
+    </p>
+    <p>
+      Let that sink in, every time a client makes an outbound request, it starts
+      looking like a transient server. That “server” exists for the duration of
+      the “connection.”
+    </p>
+    <aside>
+      TCP and QUIC complicate this a bit. It’s why you don’t often see NAT
+      Traversal happening over those protocols and why most descriptions of NAT
+      Traversal use UDP. I’m not going to pretend to understand how any of this
+      applies to TCP/QUIC!
+    </aside>
+    <h1>Everything is a server, problem solved!</h1>
+    <p>
+      If clients can start transient servers, they can start long-lived servers
+      too right? Actually, yes. A computer can do that, which isn’t surprising.
+      But the problem is twofold:
+    </p>
+    <ul>
+      <li>Firewalls</li>
+      <li>Network Address Translation</li>
+    </ul>
+    <h1>Do you connect to the net? I wouldn’t if I were you! - NetWatch</h1>
+    <div style="display: flex; justify-content: center">
+      <img
+        style="max-width: 300px"
+        src="./its-dangerous-to-go-alone-take-this-2.png"
+      />
+    </div>
+    <p>
+      In a perfect world, software would only do the things we want it to. But
+      software is less than perfect and motivated adversaries can find clever
+      ways to trick software into doing undesirable things. The internet is a
+      dangerous place. There are a lot of computers on it whose users don’t have
+      good intentions. They’re looking for misconfigured software they can trick
+      into behaving against the intentions of its operator.
+    </p>
+    <p>
+      If every time you connected to a server, you had to start your own
+      long-lived server that anyone on the internet could connect to, you’d be
+      opening yourself up to quite a bit of risk.
+    </p>
+    <p>
+      This is where firewalls come in. A common rule for “clients” is that their
+      firewalls will only allow packets from a remote computer through if the
+      client sent a packet to that address first.
+    </p>
+    <p>
+      Firewalls maintain a stateful list of all the destinations a computer has
+      sent packets. If Alice sends a message to Bob, the firewall will allow Bob
+      to send a message to Alice. Even though Alice has to have a public
+      <code class="inline">(ip, port)</code> open for Bob to send that message,
+      the firewall can prevent Charlie from sending a message to it. If Charlie
+      sends a message to Alice, the firewall looks at the list of destinations
+      it’s observed for Alice, not seeing Charlie on that list it “blocks”
+      (doesn’t forward) the message.
+    </p>
+    <h1>Getting through a firewall</h1>
+    <p>But what if Alice wants to allow Charlie to send her a message?</p>
+    <p>
+      If Alice controls the firewall, getting Charlie through is easy! Alice
+      just tells the firewall to allow messages from anyone through to her port.
+    </p>
+    <p>
+      But what if Alice doesn’t control the firewall? How can Alice “trick” the
+      firewall into allowing Charlie through?
+    </p>
+    <p>
+      That’s actually pretty easy too. Alice can tell the firewall to let
+      Charlie through by sending a message to Charlie - once the firewall sees
+      Alice send a message to Charlie it’ll let Charlie send messages to Alice.
+    </p>
+    <p>
+      The astute observer will identify the problem with this: Alice needs to
+      know Charlie wants to send her a message in order for Alice to tell the
+      firewall to let Charlie through! But Charlie can’t tell Alice that he
+      wants to send her a message because that would require Charlie to send
+      Alice a message! In order for Charlie to send messages to Alice, Charlie
+      needs to be able to send messages to Alice, <b>catch-22</b>
+    </p>
+    <h1>Side-channel Relay</h1>
+    <p>
+      Basically, every solution we are going to talk about here (both for
+      firewalls and NATs) uses the same mechanism: establish an upfront side
+      channel that Alice and Charlie can communicate through to coordinate
+      getting a direct connection to each other.
+    </p>
+    <p>This side channel has to have the following characteristics:</p>
+    <ul>
+      <li>Be discoverable by both Alice and Charlie</li>
+      <ul>
+        <li>
+          If Charlie wants to talk to Alice, Charlie needs to know that he needs
+          to go through the side channel first.
+        </li>
+      </ul>
+      <li>Be able to send messages to both Alice and Charlie</li>
+      <ul>
+        <li>
+          The side channel only works if it can send messages directly to both
+          Alice and Charlie. Otherwise, we would need a side-channel for our
+          side-channel!
+        </li>
+      </ul>
+    </ul>
+    <p>
+      Some approaches will have additional requirements for this side-channel,
+      but fundamentally they all rely on relaying messages between Alice and
+      Charlie through an existing connection that is already capable of
+      communicating with both of them.
+    </p>
+    <h1>Firewall Rendezvous</h1>
+    <p>
+      In the above example, if Alice is already talking to Bob, Charlie can ask
+      Bob to tell Alice to send a message to Charlie. Once Alice sends Charlie
+      that message, the firewall will let Charlie through to Alice. For a
+      symmetric firewall, where Alice and Charlie both need to trick their
+      firewalls into letting messages through, Charlie and Alice both ask Bob to
+      tell each other to send messages.
+    </p>
+    <p>
+      Once Alice and Charlie know they need to send each other messages, they
+      start sending messages to each other until they start receiving those
+      messages. At this point, they’ve breached the firewall and can start
+      communicating.
+    </p>
+    <p>
+      Using Bob as a Rendezvous point, Alice and Charlie can get through each
+      other’s firewalls.
+    </p>
+    <h1>Sounds easy right?</h1>
+    <p>
+      Alice and Charlie need to send each other packets through Bob and
+      coordinate getting through each other’s firewalls before they can start
+      sending each other packets directly. To be explicit, Alice and Charlie
+      both have an <code class="inline">(ip, port)</code> that they created and
+      are using to communicate with Bob. Bob receives a packet from Charlie’s
+      <code class="inline">(ip, port)</code> asking to be connected to Alice.
+      Bob then sends a packet to Alice with Charlie’s
+      <code class="inline">(ip, port)</code>. Alice then sends a packet to that
+      <code class="inline">(ip, port)</code> so she can let Charlie through her
+      firewall.
+    </p>
+    <p>
+      The astute observer will notice a pretty challenging problem: this needs
+      to happen at a different layer of the OSI Model than most software
+      engineers are used to working in. What’s worse is that most libraries for
+      networking protocols don’t allow access to that layer.
+    </p>
+    <p>
+      You can’t just “add NAT Traversal” to your SQL or gRPC connection. In
+      order to get through a firewall (or NAT), those protocols need to be aware
+      of the side-channel relay and handle coordinating and establishing a
+      direct connection before trying to send the SQL/gRPC packets.
+    </p>
+    <aside>
+      This was surprising to me! I thought NAT traversal was something you just
+      “sprinkled into” an application. No, you have to bake it into the
+      communication protocol.
+    </aside>
+    <h1>Tunneling</h1>
+    <p>
+      To say that another way: NAT Traversal has to be baked directly into the
+      protocol. There are two common approaches to this. The first is to bake it
+      directly into the protocol from day one like WebRTC does. This approach
+      isn’t viable for most applications. Rebuilding every application layer
+      protocol from the ground up to do NAT Traversal would be difficult and
+      expensive.
+    </p>
+    <p>
+      The other approach is to establish a tunnel. The tunnel handles all NAT
+      Traversal and exposes a standard OSI-like networking API on top of it.
+    </p>
+    <p>
+      So, first, Alice and Charlie each start up a tunnel service. Then they
+      instruct the tunnel to establish a connection to each other through Bob’s
+      rendezvous point. Once Alice and Charlie have a direct connection to each
+      other, they can pump another protocol through that tunnel. This lets Alice
+      and Charlie use standard libraries and software that don’t support NAT
+      traversal.
+    </p>
+    <h1>"Conclusion"</h1>
+    <p>
+      So now we have some powerful building blocks for establishing a direction
+      communication channel between Alice and Charlie! We need a rendezvous
+      point that Alice and Charlie can communicate through, and we need either a
+      NAT-Traversal capable protocol or a tunnel that handles NAT-Traversal for
+      us.
+    </p>
+    <p>
+      Once those are in place, Alice and Charlie can coordinate allowing each
+      other access through their firewalls and everything is solved. Right?
+    </p>
+    <p>Right? …… Right?</p>
+    <div style="display: flex; justify-content: center">
+      <img style="max-width: 300px" src="./8tjq47.jpg" />
+    </div>
+    <h1>The final boss battle</h1>
+    <p>
+      You know when you make it through a level in a video game and you get to
+      that room full of health potions, great armor, a save checkpoint, etc.?
+      For a second life is good, you just went through hell and now you’re
+      getting pampered by the game developers. Then you realize that can only
+      mean one thing: there is an imminent boss battle.
+    </p>
+    <p>That boss is Network Address Translation.</p>
+    <p>
+      Most computers do not connect directly to the internet. There is a router
+      that connects to the internet. That router creates its own network, a
+      subnetwork, that your device connects to. Do you know the saying that
+      192.168.1.1 is where the heart is? 192.168.1.* is a subnet.
+    </p>
+    <p>
+      When Alice connects to Bob, she opens up a port on her computer, but her
+      IP address isn’t unique on the internet. Her IP address might be
+      192.168.1.123, an address shared by many computers across many subnets. So
+      when Alice sends a package from port 23456, her
+      <code class="inline">(ip, port)</code> is
+      <code class="inline">(192.168.1.123,23456)</code>
+    </p>
+    <p>
+      So then how does Bob know how to get a packet back to Alice? The answer is
+      that Bob doesn’t see the packet sent from Alice. Alice’s router changes
+      the packet before sending it to Bob.
+    </p>
+    <p>
+      Alice’s router opens up its own port, let's say 34567, and replaces
+      Alice’s IP address and port with its own. It then keeps track of the
+      mapping between Alice’s <code class="inline">(ip, port)</code> and the
+      router’s <code class="inline">(ip, port)</code> to reliably forward
+      packets back and forth.
+    </p>
+    <p>
+      This is called Network Address Translation. The router translates packets
+      from its subnetwork to the network the router is connected to.
+    </p>
+    <p>
+      Bob doesn’t know or care about any of this. To Bob, the packet came from
+      Alice and Bob sends a packet back to Alice. Alice’s router hides all of
+      this happily rewriting and forwarding packets between Alice and Bob.
+    </p>
+    <p>
+      So now we have Network Address Translation. Alice sends a packet to Bob.
+      Her router rewrites the packet to come from the router. Bob gets the
+      packet and sends a packet back to Alice’s router in response. The router
+      then forwards the messages to Alice.
+    </p>
+    <h1>This is too easy</h1>
+    <p>
+      So Bob has Alice’s <code class="inline">(ip, port)</code> and is able to
+      communicate with her. It’s going through her router and her router is
+      hiding all the NAT stuff. Both Alice and her router might have their own
+      firewalls, but Bob has already gotten through them.
+    </p>
+    <p>How does Charlie communicate with Alice now?</p>
+    <p>
+      All we need to do is follow the same process we used to get through the
+      firewall. Bob tells Alice to send a packet to Charlie. Alice sends the
+      packet to Charlie. The router rewrites the packet using Network Address
+      Translation. Charlie receives the packet from Alice’s router. This opens
+      up Alice’s firewall(s) for Charlie.
+    </p>
+    <p>
+      Charlie can now send a message through to Alice by sending them to the
+      router and the router will happily forward them along to Alice.
+    </p>
+    <p>This boss battle is easy and is called “Easy NAT.”</p>
+    <p>
+      You might see the looming challenge: if there is an “Easy NAT” then there
+      must be a “Not Easy NAT”
+    </p>
+    <h1>The “Hard NAT”</h1>
+    <p>
+      “Hard NAT” works the same as above but every destination Alice dials gets
+      a random dedicated port on her router. This means the
+      <code class="inline">(ip, port)</code> that Bob gets will not be valid for
+      Charlie! If Charlie tries to send the router a packet to Bob’s assigned
+      port, Alice’s router will drop it.
+    </p>
+    <p>
+      There is no way for Alice to know which port Charlie should send a packet
+      to get through her firewall(s). She can’t know that in advance.
+    </p>
+    <p>
+      This is a lot easier if Charlie has no NAT or firewall. In that case, Bob
+      can tell Alice to send a packet to Charlie. When Charlie gets that packet,
+      he can send a packet back to Alice and it’ll make it through her NAT and
+      firewalls.
+    </p>
+    <p>
+      But if Charlie is also behind a firewall, he will need to send a packet to
+      Alice first to open up a path for her through his firewall. Otherwise,
+      Alice’s packet will get blocked. But where should he send the packet?
+    </p>
+    <p>
+      From this point forward, every approach to NAT traversal becomes a
+      probabilities game. Alice and Charlie both take a spray-and-pray approach
+      sending packets to each other at random ports hoping to “guess” the right
+      port number that will punch a hole through the firewalls and NATs between
+      the two nodes. They keep guessing until they get through or a timeout
+      passes and they give up.
+    </p>
+    <p>
+      That timeout isn’t just for Alice and Charlie, routers often maintain a
+      timeout for port mapping where they’ll close the route if a message isn’t
+      received. Once you reach that timeout, all of your previous guesses could
+      be valid again. If you can’t find the right ports in that window of time,
+      you’re unlikely to ever find them.
+    </p>
+    <p>
+      It gets even harder when the firewall has security policies that detect
+      port scanning since Alice and Charlie are quite literally being forced to
+      port scan each other’s routers. If the security policy kicks in, their
+      routers are likely to ban each other’s IP addresses outright.
+    </p>
+    <h1>The “Dark Souls NAT”</h1>
+    <p>
+      In this scenario, a NAT traversal strategy is unlikely to succeed. Even if
+      the routers’ timeouts are extremely generous and there are no
+      port-scanning security policies, it can take many minutes for Alice and
+      Charlie to both make a valid matching guess. This latency is beyond what
+      most applications can accept.
+    </p>
+    <p>
+      The final boss is a “Hard NAT” router that load balances connections
+      across multiple IP addresses. These are common in corporate networks. If
+      Alice connects to the internet through a router that has a pool of IP
+      addresses, she can’t even be sure what IP address Charlie should try to
+      connect to.
+    </p>
+    <p>
+      When Alice tries to send a message to Bob, the router might pick any one
+      of the IP addresses from the pool. When she sends a message to Charlie, it
+      might come from a different IP address in the pool.
+    </p>
+    <p>
+      Charlie will need to know all possible IP addresses Alice might send a
+      packet from and guess the right
+      <code class="inline">(IP, port)</code> combination to open up his firewall
+      for Alice.
+    </p>
+    <p>
+      In Dark Souls, this is when you shamelessly throw the controller at the TV
+      and give up. That’s what we are going to do.
+    </p>
+    <h1>Giving up and maintaining performance</h1>
+    <p>
+      When Alice and Charlie are both behind “Easy NATs” and Bob can help them
+      coordinate and get through each other’s firewalls, NAT Traversal is quick.
+    </p>
+    <p>
+      But how do Alice and Charlie know they need NAT traversal in the first
+      place?
+    </p>
+    <p>
+      On the internet, there is no “baked-in” confirmation of delivery.
+      Confirmation of delivery comes in the form of receiving a response back.
+      All you can do is send a packet and wait.
+    </p>
+    <p>
+      Waiting isn’t great. If I want to connect two computers, waiting 5 seconds
+      to figure out if I need to do NAT traversal is 5 seconds someone is
+      staring at a “connecting” screen. And what do we do if NAT traversal isn’t
+      easy? Do users sit and wait for 10s+?
+    </p>
+    <p>
+      Can we have our cake and eat it too? Peer-to-peer connections that get
+      through firewalls and NAT while still maintaining similar performance to a
+      publicly routable centralized service?
+    </p>
+    <p>Actually, yes. Well, kind of. If Bob is generous.</p>
+    <p>
+      If Bob is publicly addressable and already providing relaying services to
+      Alice and Charlie, that relay can be used both for NAT Traversal and
+      communicating.
+    </p>
+    <p>
+      This means Alice and Charlie can start communicating immediately through
+      Bob. Bob provides a full relaying service allowing Alice and Charlie to
+      communicate even if they can’t talk directly to one another.
+    </p>
+    <p>
+      In parallel, Alice and Charlie try directly dialing each other. If that
+      times out, they start NAT traversal. If that fails, they just keep talking
+      through Bob forever. But as soon as Alice and Charlie find a way through
+      their NAT and firewalls, they “upgrade” their connection to a peer-to-peer
+      connection.
+    </p>
+    <h1>Conclusion (for real this time)</h1>
+    <p>
+      Getting through a firewall is easy. Getting through an “Easy NAT” is easy.
+      Getting through a single “Hard NAT” is tricky, but doable. Getting through
+      multiple “Hard NATs” and some corporate network configurations is
+      basically impossible.
+    </p>
+    <p>
+      Luckily most computers can perform NAT traversal fairly easily. “Hard
+      NATs” aren’t exceptionally common and it’s even more rare for both ends of
+      a connection to be behind a “Hard NAT.”
+    </p>
+    <p>
+      In every NAT Traversal strategy, we need a rendezvous point. To maintain
+      performance, and when NAT Traversal fails, we need that rendezvous point
+      to act as a relay for all communication.
+    </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+      document
+        .querySelectorAll("code")
+        .forEach((v) => (v.innerHTML = v.innerHTML.trim()));
+      document
+        .querySelectorAll("code.inline")
+        .forEach((v) => hljs.highlightElement(v));
+    </script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  </body>
+</html>
