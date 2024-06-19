@@ -23,6 +23,12 @@ const feed = new Podcast({
       text: "Society & Culture",
     },
     {
+      text: "Documentary",
+    },
+    {
+      text: "Relationships",
+    },
+    {
       text: "Places & Travel",
     },
   ],
