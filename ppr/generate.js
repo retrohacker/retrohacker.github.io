@@ -21,15 +21,17 @@ const feed = new Podcast({
   itunesCategory: [
     {
       text: "Society & Culture",
-    },
-    {
-      text: "Documentary",
-    },
-    {
-      text: "Relationships",
-    },
-    {
-      text: "Places & Travel",
+      subcats: [
+        {
+          text: "Documentary",
+        },
+        {
+          text: "Relationships",
+        },
+        {
+          text: "Places & Travel",
+        },
+      ],
     },
   ],
   itunesImage: "https://blankenship.io/ppr/cover.jpg",
