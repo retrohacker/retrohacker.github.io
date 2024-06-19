@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../index.css" />
     <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css" />
     <title>Positively Power Ranch</title>
   </head>
   <body>
@@ -13,23 +14,42 @@
     </div>
     <div class="badges">
       <a href=""><img src="./assets/amazonmusic-badge.svg" /></a>
-      <a href=""><img src="./assets/applepodcasts-badge.svg" /></a>
+      <a
+        href="https://podcasts.apple.com/us/podcast/positively-power-ranch/id1752938389"
+        ><img src="./assets/applepodcasts-badge.svg"
+      /></a>
       <a href=""><img src="./assets/audible-badge.svg" /></a>
-      <a href=""><img src="./assets/iheartradio-badge.svg" /></a>
+      <a href="https://iheart.com/podcast/187293016/"
+        ><img src="./assets/iheartradio-badge.svg"
+      /></a>
       <a href=""><img src="./assets/overcast-badge.svg" /></a>
-      <a href=""><img src="./assets/pandora-badge.svg" /></a>
-      <a href=""><img src="./assets/podcastaddict-badge.svg" /></a>
-      <a href=""><img src="./assets/rss-badge.svg" /></a>
-      <a href=""><img src="./assets/spotify-badge.svg" /></a>
+      <a
+        href="https://www.pandora.com/podcast/positively-power-ranch/PC:1001089147"
+        ><img src="./assets/pandora-badge.svg"
+      /></a>
+      <a href="https://podcastaddict.com/podcast/positively-power-ranch/5184346"
+        ><img src="./assets/podcastaddict-badge.svg"
+      /></a>
+      <a href="https://www.blankenship.io/ppr/rss.xml"
+        ><img src="./assets/rss-badge.svg"
+      /></a>
+      <a href="https://open.spotify.com/show/0ovfFEi1q4CvAqW4GngYgh"
+        ><img src="./assets/spotify-badge.svg"
+      /></a>
     </div>
     <b>Episodes:</b>
-    <ul>
-      <li>
-        <a
-          href="https://pub-b4c15350e6b44595bca56540e4b52090.r2.dev/001_wicks.mp3"
-          >001 - Russ Wicks</a
-        >
-      </li>
-    </ul>
+    <p>001 - Russ Wicks</p>
+    <div class="container">
+      <audio crossorigin playsinline>
+        <source
+          src="https://pub-b4c15350e6b44595bca56540e4b52090.r2.dev/001_wicks.mp3"
+          type="audio/mp3"
+        />
+      </audio>
+    </div>
+    <script src="https://unpkg.com/plyr@3"></script>
+    <script>
+      const player = new Plyr("audio", {});
+    </script>
   </body>
 </html>

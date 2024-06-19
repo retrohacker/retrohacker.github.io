@@ -20,3 +20,13 @@
 .badges > a > img:hover {
   box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
 }
+
+.container {
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.container > h1 {
+  font-size: 14px;
+  padding: 10px;
+}
